@@ -8,16 +8,27 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 //实现AuthorizingRealm接口 用户认证
 public class PersonShiroRealm extends AuthorizingRealm {
     @Autowired
     private LoginPersonService loginPersonService;
+
+    public PersonShiroRealm() {
+
+    }
+
+    public PersonShiroRealm(HashedCredentialsMatcher hashedCredentialsMatcher) {
+        super.setCredentialsMatcher(hashedCredentialsMatcher);
+    }
+
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -55,6 +66,7 @@ public class PersonShiroRealm extends AuthorizingRealm {
         } else {
             //这里验证authenticationToken和simpleAuthenticationInfo的信息
             SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(name, personInfo.getPerson().getPassword(), getName());
+            simpleAuthenticationInfo.setCredentialsSalt(ByteSource.Util.bytes(name + personInfo.getPerson().getSalt()));
             return simpleAuthenticationInfo;
         }
     }

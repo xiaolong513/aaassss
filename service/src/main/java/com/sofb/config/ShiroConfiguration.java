@@ -22,7 +22,7 @@ public class ShiroConfiguration {
     //将自己的验证方式加入容器
     @Bean
     public PersonShiroRealm personShiroRealm() {
-        PersonShiroRealm personShiroRealm = new PersonShiroRealm();
+        PersonShiroRealm personShiroRealm = new PersonShiroRealm(hashedCredentialsMatcher());
         return personShiroRealm;
     }
 
@@ -68,6 +68,7 @@ public class ShiroConfiguration {
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName("MD5"); //加密方式
         credentialsMatcher.setHashIterations(2);//散列次数
+        credentialsMatcher.setStoredCredentialsHexEncoded(true);
         return credentialsMatcher;
     }
 }

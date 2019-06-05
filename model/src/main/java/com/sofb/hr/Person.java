@@ -33,14 +33,20 @@ public class Person extends BaseEntity {
     /**
      * 登录账号
      */
-    @Column(name = "fUserName", columnDefinition = "varchar(255) COMMENT '用户名'")
+    @Column(name = "fUserName", columnDefinition = "varchar(255) not null COMMENT '用户名'")
     private String userName;
 
     /**
      * 密码
      */
-    @Column(name = "fPassword", columnDefinition = "varchar(255) COMMENT '密码'")
+    @Column(name = "fPassword", columnDefinition = "varchar(255) not null COMMENT '密码'")
     private String password;
+
+    /**
+     * 盐
+     */
+    @Column(name = "fSalt", columnDefinition = "varchar(255) not null COMMENT '盐'")
+    private String salt;
 
     /**
      * 是否删除,是否禁用,是否锁定
