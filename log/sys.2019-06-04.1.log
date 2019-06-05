@@ -1,0 +1,10 @@
+2019-06-04 15:16:15,474 INFO (StartupInfoLogger.java:59)- Started ManagerApplication in 9.583 seconds (JVM running for 10.7)
+2019-06-04 15:19:08,076 INFO (SpringApplication.java:679)- The following profiles are active: druid
+2019-06-04 15:19:15,478 INFO (StartupInfoLogger.java:59)- Started ManagerApplication in 10.68 seconds (JVM running for 11.826)
+2019-06-04 19:26:46,854 INFO (SpringApplication.java:679)- The following profiles are active: druid
+2019-06-04 19:27:09,751 INFO (SpringApplication.java:679)- The following profiles are active: druid
+2019-06-04 19:28:06,452 INFO (SpringApplication.java:679)- The following profiles are active: druid
+2019-06-04 19:28:57,315 INFO (SpringApplication.java:679)- The following profiles are active: druid
+2019-06-04 19:29:05,884 INFO (StartupInfoLogger.java:59)- Started ManagerApplication in 11.669 seconds (JVM running for 12.763)
+2019-06-04 19:32:53,075 INFO (SpringApplication.java:679)- The following profiles are active: druid
+2019-06-04 19:33:41,232 INFO (SpringApplication.java:679)- The following profiles are active: druid

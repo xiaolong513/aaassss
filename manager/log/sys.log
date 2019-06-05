@@ -1,0 +1,4 @@
+2019-06-05 09:28:51,393 INFO (SpringApplication.java:679)- The following profiles are active: druid
+2019-06-05 09:29:06,810 INFO (StartupInfoLogger.java:59)- Started PersonServiceTest in 18.591 seconds (JVM running for 20.379)
+2019-06-05 09:30:10,863 INFO (SpringApplication.java:679)- The following profiles are active: druid
+2019-06-05 09:30:25,419 INFO (StartupInfoLogger.java:59)- Started PersonServiceTest in 17.877 seconds (JVM running for 19.677)
