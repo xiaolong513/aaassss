@@ -33,6 +33,17 @@ spring:
       enabled: true
   application:
     name: sofb-manager
+  redis:
+    config:
+      clusterNodes: 10.152.200.251:6378
+      maxIdle: 100
+      maxTotal: 500
+      minIdle: 5
+      maxWaitMillis: 20000
+      password: 123456
+      connectionTimeout: 6000
+      maxAttempts: 10
+      soTimeout: 6000
 
 logging.config= classpath: logback.xml
 

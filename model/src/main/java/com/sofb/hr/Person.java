@@ -58,4 +58,8 @@ public class Person extends BaseEntity {
     public Object getFid() {
         return null;
     }
+
+    public String getCredentialsSalt() {
+        return userName + salt;
+    }
 }

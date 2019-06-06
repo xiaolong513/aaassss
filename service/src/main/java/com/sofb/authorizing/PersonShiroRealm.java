@@ -66,7 +66,7 @@ public class PersonShiroRealm extends AuthorizingRealm {
         } else {
             //这里验证authenticationToken和simpleAuthenticationInfo的信息
             SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(name, personInfo.getPerson().getPassword(), getName());
-            simpleAuthenticationInfo.setCredentialsSalt(ByteSource.Util.bytes(name + personInfo.getPerson().getSalt()));
+            simpleAuthenticationInfo.setCredentialsSalt(ByteSource.Util.bytes(personInfo.getPerson().getCredentialsSalt()));
             return simpleAuthenticationInfo;
         }
     }

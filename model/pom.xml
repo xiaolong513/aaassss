@@ -80,6 +80,12 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-all</artifactId>
             <version>1.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>quartz</artifactId>
+                    <groupId>org.opensymphony.quartz</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

@@ -1,11 +1,11 @@
 package com.sofb.config;
 
 import com.sofb.authorizing.PersonShiroRealm;
-import com.sofb.authorizing.ShiroProperties;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class ShiroConfiguration {
+public class ShiroConfig {
     @Autowired
     private ShiroProperties shiroProperties;
 
@@ -41,9 +41,9 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, String> map = new HashMap<>();
         //登出
-        map.put("/logout", "logout");
+        map.put("/logout", DefaultFilter.logout.name());
         //对所有用户认证
-        map.put("/**", "authc");
+        map.put("/**", DefaultFilter.authc.name());
         //登录
         shiroFilterFactoryBean.setLoginUrl(shiroProperties.getLoginUrl());
         //首页
