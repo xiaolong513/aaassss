@@ -1,17 +1,14 @@
 package com.sofb.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPool;
@@ -48,15 +45,23 @@ public class RedisConfig {
         // 使用Jackson2JsonRedisSerialize 替换默认序列化
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+       /* ObjectMapper objectMapper = new ObjectMapper();
+        //objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.PUBLIC_ONLY);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-
-        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);*/
 
         // 设置value的序列化规则和 key的序列化规则
-        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate stringClusterTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate redisTemplate = new StringRedisTemplate();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
@@ -76,7 +81,7 @@ public class RedisConfig {
         return new JedisCluster(nodes);
     }*/
 
-   /* @Bean
+    @Bean
     public JedisPool redisPoolFactory(RedisProperties redisProperties) {
         String[] ipPortPair = redisProperties.getClusterNodes().split(":");
 
@@ -89,7 +94,7 @@ public class RedisConfig {
                 redisProperties.getConnectionTimeout(), null);
 
         return jedisPool;
-    }*/
+    }
 
 
 }

@@ -33,4 +33,9 @@ public class ShiroProperties {
      */
     private String logoutUrl;
 
+    /**
+     * session过期时间
+     */
+    private int sessionTimeOut;
+
 }

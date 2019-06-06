@@ -1,12 +1,14 @@
 package com.sofb.config;
 
 import com.sofb.authorizing.PersonShiroRealm;
+import com.sofb.authorizing.RedisSessionDao;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +30,10 @@ public class ShiroConfig {
 
     //权限管理，配置主要是Realm的管理认证
     @Bean
-    public SecurityManager securityManager() {
+    public SecurityManager securityManager(DefaultWebSessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(personShiroRealm());
+        securityManager.setSessionManager(sessionManager);
         return securityManager;
     }
 
@@ -62,7 +65,6 @@ public class ShiroConfig {
         return authorizationAttributeSourceAdvisor;
     }
 
-
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
@@ -70,5 +72,20 @@ public class ShiroConfig {
         credentialsMatcher.setHashIterations(2);//散列次数
         credentialsMatcher.setStoredCredentialsHexEncoded(true);
         return credentialsMatcher;
+    }
+
+    /**
+     * session管理
+     *
+     * @param redisSessionDao
+     * @return
+     */
+    @Bean
+    public DefaultWebSessionManager sessionManager(RedisSessionDao redisSessionDao) {
+        DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
+        defaultWebSessionManager.setSessionDAO(redisSessionDao);
+        defaultWebSessionManager.setGlobalSessionTimeout(shiroProperties.getSessionTimeOut());//单位毫秒
+        defaultWebSessionManager.setSessionIdUrlRewritingEnabled(false);
+        return defaultWebSessionManager;
     }
 }

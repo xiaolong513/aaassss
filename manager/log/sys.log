@@ -1,3 +1,1 @@
-2019-06-06 15:29:00,166 INFO (StartupInfoLogger.java:59)- Started RedisTemplateTest in 17.434 seconds (JVM running for 19.301)
-2019-06-06 15:29:29,751 INFO (SpringApplication.java:679)- The following profiles are active: druid
-2019-06-06 15:29:42,629 INFO (StartupInfoLogger.java:59)- Started RedisTemplateTest in 16.012 seconds (JVM running for 18.005)
+2019-06-06 18:03:23,172 INFO (StartupInfoLogger.java:59)- Started RedisTemplateTest in 18.006 seconds (JVM running for 19.721)

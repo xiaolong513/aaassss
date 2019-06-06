@@ -15,6 +15,9 @@ public class RedisCache {
     @Resource(name = "redisClusterTemplate")
     private RedisTemplate<String, Object> redisClusterTemplate;
 
+    @Resource(name = "stringClusterTemplate")
+    private RedisTemplate<String, Object> stringClusterTemplate;
+
     public Object get(String key) {
         return redisClusterTemplate.opsForValue().get(key);
     }
@@ -47,9 +50,9 @@ public class RedisCache {
      * @param cacheType
      * @return
      */
-    public RedisTemplate<String, Object> getRedisTemplate(CacheType cacheType) {
+    public RedisTemplate getRedisTemplate(CacheType cacheType) {
         if (cacheType == CacheType.SESSION) {
-            return redisClusterTemplate;
+            return stringClusterTemplate;
         } else if (cacheType == CacheType.SAVE) {
             return redisClusterTemplate;
         } else {

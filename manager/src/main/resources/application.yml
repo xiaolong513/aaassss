@@ -70,3 +70,4 @@ shiro:
     login-url: /login
     logout-url: /logout
     success-url: /index
+    sessionTimeOut: 1800
