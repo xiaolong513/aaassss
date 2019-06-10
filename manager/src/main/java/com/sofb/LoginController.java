@@ -1,6 +1,8 @@
 package com.sofb;
 
 
+import com.sofb.common.ServerResult;
+import com.sofb.enums.ServerResultCodeEnum;
 import com.sofb.hr.Person;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -18,7 +20,7 @@ public class LoginController {
 
     //post登录
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(Person person) {
+    public Object login(Person person) {
         //添加用户认证信息
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
@@ -28,31 +30,31 @@ public class LoginController {
         try {
             subject.login(usernamePasswordToken);
         } catch (UnknownAccountException e) {
-            return "用户名/密码错误";
+            return new ServerResult().error(ServerResultCodeEnum.C0006);
         } catch (LockedAccountException e) {
-            return "账号被锁定";
+            return new ServerResult().error(ServerResultCodeEnum.C0007);
         } catch (AuthenticationException e) {
             e.printStackTrace();
         }
 
         if (subject.isAuthenticated()) {
-            return "登录成功";
+            return new ServerResult().success(true);
         }
-        return "登录失败";
+        return new ServerResult().error(ServerResultCodeEnum.C0009);
     }
 
     @RequestMapping(value = "/login")
-    public String showLoginForm(HttpServletRequest req, Model model) {
-        return "未登录";
+    public Object login(HttpServletRequest req, Model model) {
+        return new ServerResult().error(ServerResultCodeEnum.C0004);
     }
 
 
     //登出
     @RequestMapping(value = "/logout")
-    public String logout() {
+    public Object logout() {
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
-        return "logout";
+        return new ServerResult().success(true);
     }
 
 }
