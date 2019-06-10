@@ -1,13 +1,11 @@
 package com.sofb.authorizing;
 
+import com.sofb.enums.UserStatusEnum;
 import com.sofb.hr.LoginPersonInfo;
 import com.sofb.hr.LoginPersonService;
 import com.sofb.hr.Permission;
 import com.sofb.hr.Role;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -61,9 +59,14 @@ public class PersonShiroRealm extends AuthorizingRealm {
         String name = authenticationToken.getPrincipal().toString();
         LoginPersonInfo personInfo = loginPersonService.getByName(name);
         if (personInfo == null || personInfo.getPerson() == null) {
-            //这里返回后会报出对应异常
-            return null;
+            //没找到帐号
+            throw new UnknownAccountException();
         } else {
+            //TODO
+            if (personInfo.getPerson().getUserStatus() == UserStatusEnum.LOCKED) {
+                //帐号锁定
+                throw new LockedAccountException();
+            }
             //这里验证authenticationToken和simpleAuthenticationInfo的信息
             SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(name, personInfo.getPerson().getPassword(), getName());
             simpleAuthenticationInfo.setCredentialsSalt(ByteSource.Util.bytes(personInfo.getPerson().getCredentialsSalt()));

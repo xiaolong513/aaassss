@@ -1,5 +1,6 @@
 package com.sofb.config;
 
+import com.sofb.authorizing.PersonFilter;
 import com.sofb.authorizing.PersonShiroRealm;
 import com.sofb.authorizing.RedisSessionDao;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -46,7 +47,11 @@ public class ShiroConfig {
         //登出
         map.put("/logout", DefaultFilter.logout.name());
         //对所有用户认证
-        map.put("/**", DefaultFilter.authc.name());
+        //map.put("/login", DefaultFilter.authc.name());
+        //map.put("/**", DefaultFilter.user.name() + ",personFilter");
+        map.put("/**", DefaultFilter.user.name());
+        //map.put("/**", "personFilter");
+
         //登录
         shiroFilterFactoryBean.setLoginUrl(shiroProperties.getLoginUrl());
         //首页

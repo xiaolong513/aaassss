@@ -1,6 +1,7 @@
 package com.sofb.hr;
 
 import com.sofb.BaseEntity;
+import com.sofb.enums.UserStatusEnum;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -52,7 +53,7 @@ public class Person extends BaseEntity {
      * 是否删除,是否禁用,是否锁定
      */
     @Column(name = "fUserStatus", columnDefinition = "varchar(255) COMMENT '用户状态'")
-    private String userStatus;
+    private UserStatusEnum userStatus;
 
     @Override
     public Object getFid() {
