@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_hr_role_permission")
 @Data
-public class RolePermissionRecord extends BaseEntity {
+public class RoleResourceRecord extends BaseEntity {
 
     @GeneratedValue(generator = "brokerId")
     @GenericGenerator(name = "brokerId", strategy = "uuid")
@@ -20,8 +20,8 @@ public class RolePermissionRecord extends BaseEntity {
     @Column(name = "fRoleId", columnDefinition = "varchar(20) COMMENT '角色ID'")
     private String roleId;
 
-    @Column(name = "fPermissionId", columnDefinition = "varchar(20) COMMENT '权限ID'")
-    private String permissionId;
+    @Column(name = "fResourceId", columnDefinition = "int COMMENT '资源ID'")
+    private Long resourceId;
 
     @Override
     public Object getFid() {

@@ -1,14 +1,22 @@
 package com.sofb;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sofb.common.CollectionUtil;
 import com.sofb.common.StringUtil;
+import com.sofb.enums.SortEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Table;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -104,6 +112,13 @@ public class BaseService {
         entityManager.merge(t);
 
         return true;
+    }
+
+    protected OrderSpecifier getCreateOrder(SortEnum sortEnum, DateTimePath<Date> path) {
+        if (sortEnum == null || sortEnum == SortEnum.DESC) {
+            return new OrderSpecifier(Order.DESC, path);
+        }
+        return new OrderSpecifier(Order.ASC, path);
     }
 
 }

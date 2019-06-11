@@ -20,7 +20,7 @@ public class PersonFilter extends PathMatchingFilter {
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
 
         String username = (String) SecurityUtils.getSubject().getPrincipal();
-        SessionPerson.set(personService.findByUserName(username));
+        SessionPerson.set(personService.getByUserName(username));
         return true;
     }
 }

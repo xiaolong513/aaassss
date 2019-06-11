@@ -1,7 +1,8 @@
 package com.sofb.enums;
 
 public enum ResourceTypeEnum implements CodeBaseEnum {
-    MENU("菜单", 1), BUTTON("按钮", 2);
+    MENU("菜单", 1),
+    BUTTON("按钮", 2);
 
     private String info;
 

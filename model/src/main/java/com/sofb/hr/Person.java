@@ -26,6 +26,12 @@ public class Person extends BaseEntity {
     private String id;
 
     /**
+     * 手机号
+     */
+    @Column(name = "fPhone", columnDefinition = "varchar(20) COMMENT '手机号'")
+    private String phone;
+
+    /**
      * 工号
      */
     @Column(name = "fNumber", columnDefinition = "varchar(20) COMMENT '工号'")
@@ -41,7 +47,7 @@ public class Person extends BaseEntity {
      * 密码
      */
     @Column(name = "fPassword", columnDefinition = "varchar(255) not null COMMENT '密码'")
-    private String password;
+    private String password = "123456";
 
     /**
      * 盐
@@ -52,12 +58,12 @@ public class Person extends BaseEntity {
     /**
      * 是否删除,是否禁用,是否锁定
      */
-    @Column(name = "fUserStatus", columnDefinition = "varchar(255) COMMENT '用户状态'")
-    private UserStatusEnum userStatus;
+    @Column(name = "fUserStatus", columnDefinition = "varchar(255) not null COMMENT '用户状态'")
+    private UserStatusEnum userStatus = UserStatusEnum.NORMAL;
 
     @Override
     public Object getFid() {
-        return null;
+        return getId();
     }
 
     public String getCredentialsSalt() {

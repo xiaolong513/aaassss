@@ -12,11 +12,10 @@ public class PersonServiceTest extends BaseTest {
     public void sava_test() {
         Person person = Person.newInstance();
         person.setUserName("yves");
-        person.setPassword("90b4745035342a8f12f8a127e1bf5704");
-        person.setSalt("ed650f0ccbbbba61eeac0915f8256a56");
+        person.setPassword("123");
         person.setCreatorId("yves");
 
-        personService.save(person);
+        personService.createPerson(person);
 
     }
 

@@ -3,7 +3,6 @@ package com.sofb.authorizing;
 import com.sofb.enums.UserStatusEnum;
 import com.sofb.hr.LoginPersonInfo;
 import com.sofb.hr.LoginPersonService;
-import com.sofb.hr.Permission;
 import com.sofb.hr.Role;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -42,10 +41,9 @@ public class PersonShiroRealm extends AuthorizingRealm {
             //添加角色
             simpleAuthorizationInfo.addRole(role.getRoleName());
         }
-        for (Permission permission : personInfo.getPermissions()) {
-            //添加权限
-            simpleAuthorizationInfo.addStringPermission(permission.getPermission());
-        }
+        //添加权限
+        simpleAuthorizationInfo.addStringPermissions(personInfo.getPermissions());
+
         return simpleAuthorizationInfo;
     }
 

@@ -26,7 +26,7 @@ public class LoginPersonService extends BaseService {
         if (StringUtil.isEmpty(userName)) {
             return null;
         }
-        Person person = personService.findByUserName(userName);
+        Person person = personService.getByUserName(userName);
         if (person == null) {
             return null;
         }
@@ -38,11 +38,11 @@ public class LoginPersonService extends BaseService {
         }
         loginPersonInfo.setRoles(roles);
 
-        List<Permission> permissions = listPersmissionsByPersonId(person.getId());
-        if (CollectionUtil.isEmpty(permissions)) {
+        List<Resource> resources = listResourcesByPersonId(person.getId());
+        if (CollectionUtil.isEmpty(resources)) {
             return loginPersonInfo;
         }
-        loginPersonInfo.setPermissions(permissions);
+        loginPersonInfo.setResources(resources);
 
         return loginPersonInfo;
     }
@@ -73,8 +73,8 @@ public class LoginPersonService extends BaseService {
         return result;
     }
 
-    public List<Permission> listPersmissionsByPersonId(String personId) {
-        List<Permission> result = new ArrayList<>();
+    public List<Resource> listResourcesByPersonId(String personId) {
+        List<Resource> result = new ArrayList<>();
         if (StringUtil.isEmpty(personId)) {
             return result;
         }
@@ -82,31 +82,31 @@ public class LoginPersonService extends BaseService {
         if (CollectionUtil.isEmpty(roles)) {
             return result;
         }
-        result = listPersmissionsByRoles(roles);
+        result = listResourceByRoles(roles);
 
         return result;
     }
 
-    public List<Permission> listPersmissionsByRoles(List<Role> roles) {
-        List<Permission> result = new ArrayList<>();
+    public List<Resource> listResourceByRoles(List<Role> roles) {
+        List<Resource> result = new ArrayList<>();
         if (CollectionUtil.isEmpty(roles)) {
             return result;
         }
 
         Set<String> roleIds = roles.stream().map(item -> item.getId()).collect(Collectors.toSet());
 
-        QRolePermissionRecord qRolePermissionRecord = QRolePermissionRecord.rolePermissionRecord;
-        List<RolePermissionRecord> permissionRecords = jpaQueryFactory.selectFrom(qRolePermissionRecord).
-                where(qRolePermissionRecord.roleId.in(roleIds), qRolePermissionRecord.state.eq(StateEnum.EFFECTIVE)).
+        QRoleResourceRecord qRoleResourceRecord = QRoleResourceRecord.roleResourceRecord;
+        List<RoleResourceRecord> resourceRecords = jpaQueryFactory.selectFrom(qRoleResourceRecord).
+                where(qRoleResourceRecord.roleId.in(roleIds), qRoleResourceRecord.state.eq(StateEnum.EFFECTIVE)).
                 fetch();
 
-        if (CollectionUtil.isEmpty(permissionRecords)) {
+        if (CollectionUtil.isEmpty(resourceRecords)) {
             return result;
         }
-        Set<String> permissionIds = permissionRecords.stream().map(item -> item.getPermissionId()).collect(Collectors.toSet());
-        QPermission qPermission = QPermission.permission1;
-        result = jpaQueryFactory.selectFrom(qPermission).
-                where(qPermission.id.in(permissionIds), qPermission.state.eq(StateEnum.EFFECTIVE)).
+        Set<Long> resourceIds = resourceRecords.stream().map(item -> item.getResourceId()).collect(Collectors.toSet());
+        QResource qResource = QResource.resource;
+        result = jpaQueryFactory.selectFrom(qResource).
+                where(qResource.id.in(resourceIds), qResource.state.eq(StateEnum.EFFECTIVE)).
                 fetch();
 
         return result;

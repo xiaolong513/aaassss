@@ -17,9 +17,9 @@ public class Resource extends BaseEntity {
     private Long id;
 
     /**
-     * 角色名称
+     * 资源名称
      */
-    @Column(name = "fRoleName", columnDefinition = "varchar(20) not null COMMENT '角色名称'")
+    @Column(name = "fResourceName", columnDefinition = "varchar(20) not null COMMENT '资源名称'")
     private String resourceName;
 
     /**
@@ -31,8 +31,8 @@ public class Resource extends BaseEntity {
     /**
      * 菜单层级
      */
-    @Column(name = "fLevel", columnDefinition = "varchar(20) not null COMMENT '层级'")
-    private int level;
+    //@Column(name = "fLevel", columnDefinition = "varchar(20) not null COMMENT '层级'")
+    //private int level;
 
     /**
      * 资源类型
@@ -49,8 +49,20 @@ public class Resource extends BaseEntity {
     /**
      * 资源路径
      */
-    @Column(name = "fUrl", columnDefinition = "varchar(20) not null COMMENT '资源路径'")
+    @Column(name = "fUrl", columnDefinition = "varchar(200) not null COMMENT '资源路径'")
     private String url;
+
+    /**
+     * 权限字符串
+     */
+    @Column(name = "fPermission", columnDefinition = "varchar(200) not null COMMENT '权限字符串'")
+    private String permission;
+
+    /**
+     * 资源描述,UI界面显示使用
+     */
+    @Column(name = "fDescription", columnDefinition = "varchar(2000) COMMENT '资源描述'")
+    private String description;
 
 
     @Override
