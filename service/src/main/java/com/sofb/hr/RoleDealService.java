@@ -33,7 +33,7 @@ public class RoleDealService {
      * @return
      */
     @Transactional
-    public boolean removeRoleById(String roleId) {
+    public boolean removeRoleById(Long roleId) {
         if (StringUtil.isEmpty(roleId)) {
             return false;
         }
@@ -60,7 +60,7 @@ public class RoleDealService {
         return true;
     }
 
-    public boolean addResource(String id, String resourceIds) {
+    public boolean addResource(Long id, String resourceIds) {
         if (StringUtil.isEmpty(id)) {
             logger.info("要添加资源的角色ID为空");
             return false;
@@ -79,8 +79,8 @@ public class RoleDealService {
             logger.info(String.format("[%s]角色已被删除", id));
             return false;
         }
-        Set<String> resourceIdList = StringUtil.commaDelimitedListToSet(resourceIds);
-        boolean result = personRoleRecordService.saveByPersonAndRoleIds(id, resourceIdList);
+        Set<Long> resourceIdList = StringUtil.commaDelimitedListToLongSet(resourceIds);
+        boolean result = roleResourceRecordService.saveByRoleAndResourceIds(id, resourceIdList);
         if (!result) {
             logger.info("为角色[%s]添加资源失败", id);
             return false;

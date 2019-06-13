@@ -6,21 +6,22 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.sofb.BaseService;
-import com.sofb.common.DateUtil;
-import com.sofb.common.PageUtil;
-import com.sofb.common.Pagination;
-import com.sofb.common.StringUtil;
+import com.sofb.common.*;
 import com.sofb.enums.SortEnum;
 import com.sofb.enums.StateEnum;
 import com.sofb.form.hr.RoleSearchForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService extends BaseService {
+    private static final Logger logger = LoggerFactory.getLogger("RoleService");
     @Autowired
     private RoleRepository roleRepository;
 
@@ -31,11 +32,12 @@ public class RoleService extends BaseService {
         return saveOrUpdate(role);
     }
 
-    public Role getById(String id) {
+    public Role getById(Long id) {
         if (StringUtil.isEmpty(id)) {
             return null;
         }
-        return roleRepository.findById(id).get();
+        Optional<Role> optional = roleRepository.findById(id);
+        return (optional == null || !optional.isPresent()) ? null : optional.get();
     }
 
     public List<Role> listByRoleForm(RoleSearchForm form, Pagination page, SortEnum sortEnum) {
@@ -65,7 +67,7 @@ public class RoleService extends BaseService {
         return page.getItems();
     }
 
-    public boolean removeById(String id) {
+    public boolean removeById(Long id) {
         if (StringUtil.isEmpty(id)) {
             return false;
         }
@@ -75,7 +77,7 @@ public class RoleService extends BaseService {
                 set(qRole.state, StateEnum.DISABLED).
                 set(qRole.modifyDate, DateUtil.getCurrentDate()).
                 //还需要设置操作人
-                        where(qRole.id.eq(id));
+                        where(qRole.id.eq(id)).execute();
 
         return true;
     }

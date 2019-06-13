@@ -34,7 +34,9 @@ public class LoginController {
         } catch (LockedAccountException e) {
             return new ServerResult().error(ServerResultCodeEnum.C0007);
         } catch (AuthenticationException e) {
-            e.printStackTrace();
+            return new ServerResult().error(ServerResultCodeEnum.C0006);
+        } catch (Exception e) {
+            return new ServerResult().error(ServerResultCodeEnum.C0009);
         }
 
         if (subject.isAuthenticated()) {

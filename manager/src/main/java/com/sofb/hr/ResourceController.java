@@ -30,7 +30,7 @@ public class ResourceController extends BaseController {
         //数据转换
         List<ResourceDetailVO> voList = ResourceVOConvert.INSTANCE.c2h(roles);
 
-        return new ServerResult().success(voList);
+        return new ServerResult().success(searchForm.getPagination().setItems(voList));
 
     }
 
@@ -40,7 +40,7 @@ public class ResourceController extends BaseController {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
         }
         if (StringUtil.isEmpty(resource.getResourceName())) {
-            return new ServerResult().error(ServerResultCodeEnum.C0008, "用户名为空");
+            return new ServerResult().error(ServerResultCodeEnum.C0008, "资源名称为空");
         }
         if (StringUtil.isEmpty(resource.getResourceType())) {
             return new ServerResult().error(ServerResultCodeEnum.C0008, "资源类型为空");

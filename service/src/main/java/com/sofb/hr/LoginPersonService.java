@@ -60,7 +60,7 @@ public class LoginPersonService extends BaseService {
         if (CollectionUtil.isEmpty(personRoleRecordList)) {
             return result;
         }
-        Set<String> roleIds = personRoleRecordList.stream().map(item -> item.getRoleId()).collect(Collectors.toSet());
+        Set<Long> roleIds = personRoleRecordList.stream().map(item -> item.getRoleId()).collect(Collectors.toSet());
 
         if (CollectionUtil.isEmpty(roleIds)) {
             return result;
@@ -93,7 +93,7 @@ public class LoginPersonService extends BaseService {
             return result;
         }
 
-        Set<String> roleIds = roles.stream().map(item -> item.getId()).collect(Collectors.toSet());
+        Set<Long> roleIds = roles.stream().map(item -> item.getId()).collect(Collectors.toSet());
 
         QRoleResourceRecord qRoleResourceRecord = QRoleResourceRecord.roleResourceRecord;
         List<RoleResourceRecord> resourceRecords = jpaQueryFactory.selectFrom(qRoleResourceRecord).

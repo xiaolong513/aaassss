@@ -5,6 +5,7 @@ import com.sofb.hr.PersonService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.web.filter.PathMatchingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletRequest;
@@ -14,6 +15,7 @@ import javax.servlet.ServletResponse;
 public class PersonFilter extends PathMatchingFilter {
 
     @Autowired
+    @Lazy
     private PersonService personService;
 
     @Override

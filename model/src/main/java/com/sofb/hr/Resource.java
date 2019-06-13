@@ -49,7 +49,7 @@ public class Resource extends BaseEntity {
     /**
      * 资源路径
      */
-    @Column(name = "fUrl", columnDefinition = "varchar(200) not null COMMENT '资源路径'")
+    @Column(name = "fUrl", columnDefinition = "varchar(200) COMMENT '资源路径'")
     private String url;
 
     /**

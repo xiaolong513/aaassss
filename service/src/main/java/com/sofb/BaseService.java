@@ -2,14 +2,15 @@ package com.sofb;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.DateTimePath;
-import com.querydsl.core.types.dsl.EntityPathBase;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sofb.common.CollectionUtil;
+import com.sofb.common.SessionPerson;
 import com.sofb.common.StringUtil;
 import com.sofb.enums.SortEnum;
+import com.sofb.hr.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -23,6 +24,8 @@ import java.util.concurrent.ConcurrentMap;
 
 @Transactional
 public class BaseService {
+
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     protected final int defaultPageSize = 999;
     protected final int defaultOffSet = 0;
     @Autowired
@@ -31,13 +34,13 @@ public class BaseService {
     @Autowired
     protected EntityManager entityManager;
 
-
     private static final ConcurrentMap<Class<?>, String> class_table = new ConcurrentHashMap<>();
 
-    public <T> T insert(T t) {
+    public <T extends BaseEntity> T insert(T t) {
         if (t == null) {
             return null;
         }
+        setCreatorId(t);
         entityManager.persist(t);
         return t;
     }
@@ -108,6 +111,7 @@ public class BaseService {
         if (t == null) {
             return false;
         }
+        setCreatorId(t);
         //T oldT = (T)entityManager.find(t.getClass(), t.getFid());
         entityManager.merge(t);
 
@@ -119,6 +123,15 @@ public class BaseService {
             return new OrderSpecifier(Order.DESC, path);
         }
         return new OrderSpecifier(Order.ASC, path);
+    }
+
+    protected <T extends BaseEntity> void setCreatorId(T t) {
+        if (StringUtil.isEmpty(t.getCreatorId())) {
+            Person currentPerson = SessionPerson.get();
+            if (currentPerson != null) {
+                t.setCreatorId(currentPerson.getId());
+            }
+        }
     }
 
 }

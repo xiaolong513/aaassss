@@ -12,10 +12,12 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 //实现AuthorizingRealm接口 用户认证
 public class PersonShiroRealm extends AuthorizingRealm {
     @Autowired
+    @Lazy
     private LoginPersonService loginPersonService;
 
     public PersonShiroRealm() {

@@ -17,11 +17,11 @@ public class PersonRoleRecord extends BaseEntity {
     @Id
     private Long id;
 
-    @Column(name = "fPersonId", columnDefinition = "varchar(20) COMMENT '人员ID'")
+    @Column(name = "fkPersonId", columnDefinition = "varchar(255) COMMENT '人员ID'")
     private String personId;
 
-    @Column(name = "fRoleId", columnDefinition = "varchar(20) COMMENT '角色ID'")
-    private String roleId;
+    @Column(name = "fkRoleId", columnDefinition = "bigint(20) COMMENT '角色ID'")
+    private Long roleId;
 
 /*    @ManyToMany(cascade = CascadeType.REFRESH)
     @JoinTable(name = "t_hr_role", inverseJoinColumns = @JoinColumn(name = "role_id"), joinColumns = @JoinColumn(name = "id"))

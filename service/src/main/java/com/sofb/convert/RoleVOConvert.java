@@ -16,7 +16,8 @@ public interface RoleVOConvert {
     @Mappings({
             @Mapping(source = "createDate", target = "createDate", dateFormat = "yyyy-MM-dd"),
             @Mapping(source = "roleName", target = "roleName"),
-            @Mapping(source = "description", target = "description")
+            @Mapping(source = "description", target = "description"),
+            @Mapping(target = "state", expression = "java(role.getState().getDesc())")
 
     })
     RoleDetailVO c2h(Role role);

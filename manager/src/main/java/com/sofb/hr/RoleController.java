@@ -10,10 +10,7 @@ import com.sofb.form.hr.RoleResourceForm;
 import com.sofb.form.hr.RoleSearchForm;
 import com.sofb.vo.RoleDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,12 +31,12 @@ public class RoleController extends BaseController {
         //数据转换
         List<RoleDetailVO> voList = RoleVOConvert.INSTANCE.c2h(roles);
 
-        return new ServerResult().success(voList);
+        return new ServerResult().success(searchForm.getPagination().setItems(voList));
 
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public Object save(Role role) {
+    public Object save(@ModelAttribute Role role) {
         if (role == null) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
         }
@@ -53,7 +50,7 @@ public class RoleController extends BaseController {
 
 
     @RequestMapping(value = "/{id}/disable", method = RequestMethod.POST)
-    public Object disable(@PathVariable("id") String id) {
+    public Object disable(@PathVariable("id") Long id) {
         if (StringUtil.isEmpty(id)) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
         }
@@ -64,8 +61,8 @@ public class RoleController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/addRole", method = RequestMethod.POST)
-    public Object addRole(RoleResourceForm roleResourceForm) {
+    @RequestMapping(value = "/addSource", method = RequestMethod.POST)
+    public Object addSource(RoleResourceForm roleResourceForm) {
         if (roleResourceForm == null || StringUtil.isEmpty(roleResourceForm.getId()) || StringUtil.isEmpty(roleResourceForm.getResourceIds())) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
         }

@@ -46,7 +46,7 @@ public class PersonDealService {
         return true;
     }
 
-
+    @Transactional
     public boolean addRole(String id, String roleIds) {
         if (StringUtil.isEmpty(id)) {
             logger.info("要添加角色的经纪人ID为空");
@@ -66,7 +66,7 @@ public class PersonDealService {
             logger.info(String.format("[%s]经纪人已被删除", id));
             return false;
         }
-        Set<String> roleIdList = StringUtil.commaDelimitedListToSet(roleIds);
+        Set<Long> roleIdList = StringUtil.commaDelimitedListToLongSet(roleIds);
         boolean result = personRoleRecordService.saveByPersonAndRoleIds(person.getId(), roleIdList);
         if (!result) {
             logger.info("为经纪人[%s]添加角色失败", id);

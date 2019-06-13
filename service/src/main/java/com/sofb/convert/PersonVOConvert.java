@@ -19,7 +19,7 @@ public interface PersonVOConvert {
             @Mapping(source = "userName", target = "userName"),
             @Mapping(source = "phone", target = "phone"),
             @Mapping(source = "id", target = "id"),
-            @Mapping(target = "state", expression = "java(person.getState().name())")
+            @Mapping(target = "state", expression = "java(person.getState().getDesc())")
     })
     PersonDetailVO p2v(Person person);
 

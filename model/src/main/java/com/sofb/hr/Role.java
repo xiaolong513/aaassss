@@ -2,7 +2,6 @@ package com.sofb.hr;
 
 import com.sofb.BaseEntity;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -10,11 +9,10 @@ import javax.persistence.*;
 @Table(name = "t_hr_role")
 @Data
 public class Role extends BaseEntity {
-    @GeneratedValue(generator = "roleId")
-    @GenericGenerator(name = "roleId", strategy = "uuid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fId")
     @Id
-    private String id;
+    private Long id;
 
     /**
      * 角色名称

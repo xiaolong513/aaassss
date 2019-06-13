@@ -10,11 +10,9 @@ import com.sofb.form.hr.PersonSearchForm;
 import com.sofb.vo.PersonDetailVO;
 import com.sofb.voconvert.PersonVOConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -27,18 +25,19 @@ public class PersonController extends BaseController {
     @Autowired
     private PersonDealService personDealService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "list", method = RequestMethod.GET)
     public Object list(PersonSearchForm form) {
         List<Person> personList = personService.listByPersonForm(form, form.getPagination(), SortEnum.DESC);
 
         //数据转换
         List<PersonDetailVO> voList = PersonVOConvertUtil.p2v(personList);
 
-        return new ServerResult().success(voList);
+        return new ServerResult().success(form.getPagination().setItems(voList));
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public Object createPerson(Person person) {
+    @RequestMapping(value = "createPerson", method = RequestMethod.POST)
+    //@Transactional
+    public Object createPerson(@ModelAttribute Person person) {
         if (person == null) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
         }
@@ -54,7 +53,13 @@ public class PersonController extends BaseController {
             return new ServerResult().error(ServerResultCodeEnum.C0008, "工号为空");
         }
 
-        boolean result = personService.createPerson(person);
+        boolean result;
+        try {
+            result = personService.savePerson(person);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ServerResult().error(ServerResultCodeEnum.C0001, e.getMessage());
+        }
 
         return new ServerResult().success(result);
     }
@@ -82,7 +87,7 @@ public class PersonController extends BaseController {
     }
 
     @RequestMapping(value = "/addRole", method = RequestMethod.POST)
-    public Object addRole(PersonRoleForm personRoleForm) {
+    public Object addRole(@ModelAttribute PersonRoleForm personRoleForm) {
         if (personRoleForm == null || StringUtil.isEmpty(personRoleForm.getId()) || StringUtil.isEmpty(personRoleForm.getRoleIds())) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
         }

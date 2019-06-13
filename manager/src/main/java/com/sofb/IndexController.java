@@ -21,4 +21,11 @@ public class IndexController {
         model.addAttribute("menus", menus);
         return "index";
     }
+
+    @RequestMapping("/index")
+    public String toIndex(Model model) {
+        List<Resource> menus = null;
+        model.addAttribute("menus", menus);
+        return "index";
+    }
 }

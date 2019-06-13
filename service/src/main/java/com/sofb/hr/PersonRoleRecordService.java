@@ -25,7 +25,7 @@ public class PersonRoleRecordService extends BaseService {
     }
 
 
-    public boolean removeByRoleId(String roleId) {
+    public boolean removeByRoleId(Long roleId) {
         if (StringUtil.isEmpty(roleId)) {
             return false;
         }
@@ -50,12 +50,12 @@ public class PersonRoleRecordService extends BaseService {
     }
 
     @Transactional
-    public boolean saveByPersonAndRoleIds(String personId, Set<String> roleIdList) {
+    public boolean saveByPersonAndRoleIds(String personId, Set<Long> roleIdList) {
         if (StringUtil.isEmpty(personId) || CollectionUtil.isEmpty(roleIdList)) {
             return false;
         }
-        for (String roleId : roleIdList) {
-            if (StringUtil.isEmpty(roleId)) {
+        for (Long roleId : roleIdList) {
+            if (roleId == null) {
                 continue;
             }
             PersonRoleRecord personRoleRecord = new PersonRoleRecord();

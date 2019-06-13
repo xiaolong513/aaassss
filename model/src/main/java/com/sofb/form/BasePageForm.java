@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class BasePageForm extends BaseDateForm {
+    private Pagination pagination;
+
     /**
      * 当前页数
      */
@@ -17,7 +19,10 @@ public class BasePageForm extends BaseDateForm {
 
 
     public Pagination getPagination() {
-        return new Pagination(pageSize, currentPage);
+        if (pagination == null) {
+            pagination = new Pagination(pageSize, currentPage);
+        }
+        return pagination;
     }
 
 

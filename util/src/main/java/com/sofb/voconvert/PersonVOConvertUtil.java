@@ -1,6 +1,7 @@
 package com.sofb.voconvert;
 
 import com.sofb.common.CollectionUtil;
+import com.sofb.common.DateUtil;
 import com.sofb.hr.Person;
 import com.sofb.vo.PersonDetailVO;
 
@@ -16,6 +17,8 @@ public class PersonVOConvertUtil {
         detailVO.setId(person.getId());
         detailVO.setPhone(person.getPhone());
         detailVO.setUserName(person.getUserName());
+        detailVO.setCreateDate(DateUtil.format(person.getCreateDate(), DateUtil.DATE_PATTERN));
+        detailVO.setState(person.getState().getDesc());
         detailVO.setRoleName("");
         return detailVO;
     }
