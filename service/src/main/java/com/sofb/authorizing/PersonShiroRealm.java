@@ -73,4 +73,5 @@ public class PersonShiroRealm extends AuthorizingRealm {
             return simpleAuthenticationInfo;
         }
     }
+
 }

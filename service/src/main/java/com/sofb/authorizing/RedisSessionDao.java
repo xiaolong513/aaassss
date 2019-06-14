@@ -56,6 +56,7 @@ public class RedisSessionDao extends CachingSessionDAO {
 
     @Override
     protected Session doReadSession(Serializable serializable) {
+        logger.info("doReadSession from redis....");
         if (serializable == null) {
             logger.warn("session id is null");
             return null;

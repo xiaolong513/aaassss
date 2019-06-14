@@ -10,7 +10,6 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController {
 
 
-    //post登录
+    /*//post登录
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Object login(Person person) {
         //添加用户认证信息
@@ -46,11 +45,22 @@ public class LoginController {
             return new ServerResult().success(true);
         }
         return new ServerResult().error(ServerResultCodeEnum.C0009);
-    }
+    }*/
 
     @RequestMapping(value = "/login")
     public Object login(HttpServletRequest req, Model model) {
+        String exceptionClassName = (String) req.getAttribute("shiroLoginFailure");
+        if (UnknownAccountException.class.getName().equals(exceptionClassName)) {
+            return new ServerResult().error(ServerResultCodeEnum.C0006);
+        } else if (IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {
+            return new ServerResult().error(ServerResultCodeEnum.C0006);
+        }
         return new ServerResult().error(ServerResultCodeEnum.C0004);
+    }
+
+    @RequestMapping(value = "/unauthorized")
+    public Object unauthorized(HttpServletRequest req, Model model) {
+        return new ServerResult().error(ServerResultCodeEnum.C0006);
     }
 
 

@@ -3,6 +3,7 @@ package com.sofb.config;
 import com.sofb.authorizing.PersonFilter;
 import com.sofb.authorizing.PersonShiroRealm;
 import com.sofb.authorizing.RedisSessionDao;
+import com.sofb.authorizing.ReloginFormAuthenticationFilter;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -43,11 +44,11 @@ public class ShiroConfig {
     //Filter工厂，设置对应的过滤条件和跳转条件
     @Bean("shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager, ShiroProperties shiroProperties,
-                                                         FormAuthenticationFilter auth, PersonFilter personFilter) {
+                                                         PersonFilter personFilter) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, Filter> filters = new HashMap<>();
-        filters.put("authc", auth);
+        filters.put("authc", new ReloginFormAuthenticationFilter());
         filters.put("person", personFilter);
         shiroFilterFactoryBean.setFilters(filters);
 
