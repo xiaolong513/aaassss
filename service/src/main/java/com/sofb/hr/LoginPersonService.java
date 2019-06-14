@@ -5,14 +5,12 @@ import com.sofb.BaseService;
 import com.sofb.common.CollectionUtil;
 import com.sofb.common.SessionPerson;
 import com.sofb.common.StringUtil;
-import com.sofb.enums.StateEnum;
+import com.sofb.enums.BooleanEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class LoginPersonService extends BaseService {
@@ -22,6 +20,12 @@ public class LoginPersonService extends BaseService {
 
     @Autowired
     protected JPAQueryFactory jpaQueryFactory;
+
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private RoleService roleService;
 
     public LoginPersonInfo getByCurrentPerson() {
         Person currentPerson = SessionPerson.get();
@@ -41,7 +45,7 @@ public class LoginPersonService extends BaseService {
         }
         LoginPersonInfo loginPersonInfo = new LoginPersonInfo(person);
 
-        List<Role> roles = listRolesByPersonId(person.getId());
+        List<Role> roles = roleService.listRolesByPersonId(person.getId());
         if (CollectionUtil.isEmpty(roles)) {
             return loginPersonInfo;
         }
@@ -56,68 +60,20 @@ public class LoginPersonService extends BaseService {
         return loginPersonInfo;
     }
 
-    public List<Role> listRolesByPersonId(String personId) {
-        List<Role> result = new ArrayList<>();
-        if (StringUtil.isEmpty(personId)) {
-            return result;
-        }
-        QPersonRoleRecord qPersonRoleRecord = QPersonRoleRecord.personRoleRecord;
-        List<PersonRoleRecord> personRoleRecordList = jpaQueryFactory.selectFrom(qPersonRoleRecord).
-                where(qPersonRoleRecord.personId.eq(personId), qPersonRoleRecord.state.eq(StateEnum.EFFECTIVE)).
-                fetch();
-
-        if (CollectionUtil.isEmpty(personRoleRecordList)) {
-            return result;
-        }
-        Set<Long> roleIds = personRoleRecordList.stream().map(item -> item.getRoleId()).collect(Collectors.toSet());
-
-        if (CollectionUtil.isEmpty(roleIds)) {
-            return result;
-        }
-        QRole qRole = QRole.role;
-        result = jpaQueryFactory.selectFrom(qRole).where(qRole.id.in(roleIds), qRole.state.eq(StateEnum.EFFECTIVE)).fetch();
-        /*result = jpaQueryFactory.selectFrom(qRole).
-                where(qRole.id.in(JPAExpressions.select(qPersonRoleRecord.roleId).from(qPersonRoleRecord).where(qPersonRoleRecord.personId.eq(personId)))).fetch();*/
-
-        return result;
-    }
 
     public List<Resource> listResourcesByPersonId(String personId) {
         List<Resource> result = new ArrayList<>();
         if (StringUtil.isEmpty(personId)) {
             return result;
         }
-        List<Role> roles = listRolesByPersonId(personId);
+        List<Role> roles = roleService.listRolesByPersonId(personId);
         if (CollectionUtil.isEmpty(roles)) {
             return result;
         }
-        result = listResourceByRoles(roles);
+        result = resourceService.listResourceByRoles(roles, BooleanEnum.TURE);
 
         return result;
     }
 
-    public List<Resource> listResourceByRoles(List<Role> roles) {
-        List<Resource> result = new ArrayList<>();
-        if (CollectionUtil.isEmpty(roles)) {
-            return result;
-        }
 
-        Set<Long> roleIds = roles.stream().map(item -> item.getId()).collect(Collectors.toSet());
-
-        QRoleResourceRecord qRoleResourceRecord = QRoleResourceRecord.roleResourceRecord;
-        List<RoleResourceRecord> resourceRecords = jpaQueryFactory.selectFrom(qRoleResourceRecord).
-                where(qRoleResourceRecord.roleId.in(roleIds), qRoleResourceRecord.state.eq(StateEnum.EFFECTIVE)).
-                fetch();
-
-        if (CollectionUtil.isEmpty(resourceRecords)) {
-            return result;
-        }
-        Set<Long> resourceIds = resourceRecords.stream().map(item -> item.getResourceId()).collect(Collectors.toSet());
-        QResource qResource = QResource.resource;
-        result = jpaQueryFactory.selectFrom(qResource).
-                where(qResource.id.in(resourceIds), qResource.state.eq(StateEnum.EFFECTIVE)).
-                fetch();
-
-        return result;
-    }
 }

@@ -15,9 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleService extends BaseService {
@@ -80,5 +79,80 @@ public class RoleService extends BaseService {
                         where(qRole.id.eq(id)).execute();
 
         return true;
+    }
+
+    public List<Role> listRolesByPersonId(String personId) {
+        List<Role> result = new ArrayList<>();
+        if (StringUtil.isEmpty(personId)) {
+            return result;
+        }
+        QPersonRoleRecord qPersonRoleRecord = QPersonRoleRecord.personRoleRecord;
+        List<PersonRoleRecord> personRoleRecordList = jpaQueryFactory.selectFrom(qPersonRoleRecord).
+                where(qPersonRoleRecord.personId.eq(personId), qPersonRoleRecord.state.eq(StateEnum.EFFECTIVE)).
+                fetch();
+
+        if (CollectionUtil.isEmpty(personRoleRecordList)) {
+            return result;
+        }
+        Set<Long> roleIds = personRoleRecordList.stream().map(item -> item.getRoleId()).collect(Collectors.toSet());
+
+        if (CollectionUtil.isEmpty(roleIds)) {
+            return result;
+        }
+        QRole qRole = QRole.role;
+        result = jpaQueryFactory.selectFrom(qRole).where(qRole.id.in(roleIds), qRole.state.eq(StateEnum.EFFECTIVE)).fetch();
+
+        return result;
+    }
+
+    public Map<String, List<Role>> mapRolesByPersonId(Set<String> personIds) {
+        Map<String, List<Role>> rolesMap = new HashMap<>();
+        if (CollectionUtil.isEmpty(personIds)) {
+            return rolesMap;
+        }
+        QPersonRoleRecord qPersonRoleRecord = QPersonRoleRecord.personRoleRecord;
+        List<PersonRoleRecord> personRoleRecordList = jpaQueryFactory.selectFrom(qPersonRoleRecord).
+                where(qPersonRoleRecord.personId.in(personIds), qPersonRoleRecord.state.eq(StateEnum.EFFECTIVE)).
+                fetch();
+
+        if (CollectionUtil.isEmpty(personRoleRecordList)) {
+            return rolesMap;
+        }
+        Map<String, List<PersonRoleRecord>> personRoleRecords = personRoleRecordList.stream().collect(Collectors.groupingBy(PersonRoleRecord::getPersonId));
+        Set<Long> roleIds = personRoleRecordList.stream().map(item -> item.getRoleId()).collect(Collectors.toSet());
+
+        if (CollectionUtil.isEmpty(roleIds)) {
+            return rolesMap;
+        }
+        QRole qRole = QRole.role;
+        List<Role> roles = jpaQueryFactory.selectFrom(qRole).where(qRole.id.in(roleIds), qRole.state.eq(StateEnum.EFFECTIVE)).fetch();
+        if (CollectionUtil.isEmpty(roles)) {
+            return rolesMap;
+        }
+        Map<Long, Role> roleMap = roles.stream().collect(Collectors.toMap(Role::getId, a -> a, (a, b) -> b));
+
+        personIds.stream().forEach(item -> {
+            List<PersonRoleRecord> personsRole = personRoleRecords.get(item);
+            if (CollectionUtil.isEmpty(personsRole)) {
+                return;
+            }
+            List<Role> listRole = rolesMap.get(item);
+            if (CollectionUtil.isEmpty(listRole)) {
+                listRole = new ArrayList<>();
+                rolesMap.put(item, listRole);
+            }
+            addRole(listRole, personsRole, roleMap);
+        });
+
+        return rolesMap;
+    }
+
+    private void addRole(List<Role> roles, List<PersonRoleRecord> personsRole, Map<Long, Role> roleMap) {
+        if (CollectionUtil.isEmpty(personsRole)) {
+            return;
+        }
+        for (PersonRoleRecord personRoleRecord : personsRole) {
+            roles.add(roleMap.get(personRoleRecord.getRoleId()));
+        }
     }
 }

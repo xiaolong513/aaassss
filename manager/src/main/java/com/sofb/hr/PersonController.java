@@ -8,7 +8,6 @@ import com.sofb.enums.SortEnum;
 import com.sofb.form.hr.PersonRoleForm;
 import com.sofb.form.hr.PersonSearchForm;
 import com.sofb.vo.PersonDetailVO;
-import com.sofb.voconvert.PersonVOConvertUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +25,9 @@ public class PersonController extends BaseController {
     private PersonDealService personDealService;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    @RequiresPermissions("person:view")
     public Object list(PersonSearchForm form) {
-        List<Person> personList = personService.listByPersonForm(form, form.getPagination(), SortEnum.DESC);
-
         //数据转换
-        List<PersonDetailVO> voList = PersonVOConvertUtil.p2v(personList);
+        List<PersonDetailVO> voList = personDealService.listByPersonForm(form, form.getPagination(), SortEnum.DESC);
 
         return new ServerResult().success(form.getPagination().setItems(voList));
     }

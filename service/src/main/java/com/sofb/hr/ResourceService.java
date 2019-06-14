@@ -5,10 +5,8 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.sofb.BaseService;
-import com.sofb.common.DateUtil;
-import com.sofb.common.PageUtil;
-import com.sofb.common.Pagination;
-import com.sofb.common.StringUtil;
+import com.sofb.common.*;
+import com.sofb.enums.BooleanEnum;
 import com.sofb.enums.ResourceTypeEnum;
 import com.sofb.enums.SortEnum;
 import com.sofb.enums.StateEnum;
@@ -19,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceService extends BaseService {
@@ -34,6 +34,9 @@ public class ResourceService extends BaseService {
         if (resource.getResourceType() == ResourceTypeEnum.MENU && StringUtil.isEmpty(resource.getUrl())) {
             logger.info("菜单url为空");
             return false;
+        }
+        if (resource.getResourceType() == ResourceTypeEnum.MENU) {
+            resource.setAvailable(BooleanEnum.TURE);
         }
 
         insert(resource);
@@ -77,5 +80,41 @@ public class ResourceService extends BaseService {
 
         PageUtil.setPageData(pagination, jpaQuery);
         return pagination.getItems();
+    }
+
+    /**
+     * 查询已启用的资源
+     *
+     * @param roles
+     * @return
+     */
+    public List<Resource> listResourceByRoles(List<Role> roles, BooleanEnum available) {
+        List<Resource> result = new ArrayList<>();
+        if (CollectionUtil.isEmpty(roles)) {
+            return result;
+        }
+
+        Set<Long> roleIds = roles.stream().map(item -> item.getId()).collect(Collectors.toSet());
+
+        QRoleResourceRecord qRoleResourceRecord = QRoleResourceRecord.roleResourceRecord;
+        List<RoleResourceRecord> resourceRecords = jpaQueryFactory.selectFrom(qRoleResourceRecord).
+                where(qRoleResourceRecord.roleId.in(roleIds), qRoleResourceRecord.state.eq(StateEnum.EFFECTIVE)).
+                fetch();
+
+        if (CollectionUtil.isEmpty(resourceRecords)) {
+            return result;
+        }
+        Set<Long> resourceIds = resourceRecords.stream().map(item -> item.getResourceId()).collect(Collectors.toSet());
+        QResource qResource = QResource.resource;
+
+        Predicate predicate = qResource.state.eq(StateEnum.EFFECTIVE);
+        predicate = ExpressionUtils.and(predicate, qResource.id.in(resourceIds));
+        predicate = available == null ? predicate : ExpressionUtils.and(predicate, qResource.available.eq(available));
+
+        result = jpaQueryFactory.selectFrom(qResource).
+                where(predicate).
+                fetch();
+
+        return result;
     }
 }
