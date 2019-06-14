@@ -3,6 +3,7 @@ package com.sofb.hr;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sofb.BaseService;
 import com.sofb.common.CollectionUtil;
+import com.sofb.common.SessionPerson;
 import com.sofb.common.StringUtil;
 import com.sofb.enums.StateEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,14 @@ public class LoginPersonService extends BaseService {
 
     @Autowired
     protected JPAQueryFactory jpaQueryFactory;
+
+    public LoginPersonInfo getByCurrentPerson() {
+        Person currentPerson = SessionPerson.get();
+        if (currentPerson == null) {
+            return null;
+        }
+        return getByName(currentPerson.getUserName());
+    }
 
     public LoginPersonInfo getByName(String userName) {
         if (StringUtil.isEmpty(userName)) {

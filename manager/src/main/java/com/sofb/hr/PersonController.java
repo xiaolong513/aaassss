@@ -9,10 +9,10 @@ import com.sofb.form.hr.PersonRoleForm;
 import com.sofb.form.hr.PersonSearchForm;
 import com.sofb.vo.PersonDetailVO;
 import com.sofb.voconvert.PersonVOConvertUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -26,6 +26,7 @@ public class PersonController extends BaseController {
     private PersonDealService personDealService;
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
+    @RequiresPermissions("person:view")
     public Object list(PersonSearchForm form) {
         List<Person> personList = personService.listByPersonForm(form, form.getPagination(), SortEnum.DESC);
 
@@ -37,6 +38,7 @@ public class PersonController extends BaseController {
 
     @RequestMapping(value = "createPerson", method = RequestMethod.POST)
     //@Transactional
+    @RequiresPermissions("person:create")
     public Object createPerson(@ModelAttribute Person person) {
         if (person == null) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
@@ -65,6 +67,7 @@ public class PersonController extends BaseController {
     }
 
     @RequestMapping(value = "/{id}/changePassword", method = RequestMethod.POST)
+    @RequiresPermissions("person:changePassword")
     public Object changePassword(@PathVariable("id") String id, String newPassword) {
         if (StringUtil.isEmpty(id)) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
@@ -78,6 +81,7 @@ public class PersonController extends BaseController {
     }
 
     @RequestMapping(value = "/{id}/disable", method = RequestMethod.POST)
+    @RequiresPermissions("person:delete")
     public Object disable(@PathVariable("id") String id) {
         if (StringUtil.isEmpty(id)) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);
@@ -87,6 +91,7 @@ public class PersonController extends BaseController {
     }
 
     @RequestMapping(value = "/addRole", method = RequestMethod.POST)
+    @RequiresPermissions("person:addRole")
     public Object addRole(@ModelAttribute PersonRoleForm personRoleForm) {
         if (personRoleForm == null || StringUtil.isEmpty(personRoleForm.getId()) || StringUtil.isEmpty(personRoleForm.getRoleIds())) {
             return new ServerResult().error(ServerResultCodeEnum.C0008);

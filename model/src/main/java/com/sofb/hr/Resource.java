@@ -1,6 +1,7 @@
 package com.sofb.hr;
 
 import com.sofb.BaseEntity;
+import com.sofb.enums.BooleanEnum;
 import com.sofb.enums.ResourceTypeEnum;
 import lombok.Data;
 
@@ -38,6 +39,7 @@ public class Resource extends BaseEntity {
      * 资源类型
      */
     @Column(name = "fResourceType", columnDefinition = "varchar(20) not null COMMENT '资源类型'")
+    @Enumerated(EnumType.STRING)
     private ResourceTypeEnum resourceType;
 
     /**
@@ -63,6 +65,13 @@ public class Resource extends BaseEntity {
      */
     @Column(name = "fDescription", columnDefinition = "varchar(2000) COMMENT '资源描述'")
     private String description;
+
+    /**
+     * 权限是否启用
+     */
+    @Column(name = "fAvailable", columnDefinition = "varchar(2000) not null COMMENT '权限是否启用'")
+    @Enumerated(EnumType.STRING)
+    private BooleanEnum available = BooleanEnum.FALSE;
 
 
     @Override

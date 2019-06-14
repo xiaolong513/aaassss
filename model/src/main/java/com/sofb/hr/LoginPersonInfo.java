@@ -4,7 +4,9 @@ package com.sofb.hr;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -33,7 +35,7 @@ public class LoginPersonInfo {
     private List<Role> roles;
 
     /**
-     * 角色
+     * 资源
      */
     private List<Resource> resources;
 
@@ -42,6 +44,13 @@ public class LoginPersonInfo {
             return new ArrayList<>();
         }
         return resources.stream().map(item -> item.getPermission()).collect(Collectors.toList());
+    }
+
+    public Set<String> getRoleNames() {
+        if (roles == null || roles.isEmpty()) {
+            return new HashSet<>();
+        }
+        return roles.stream().map(item -> item.getRoleName()).collect(Collectors.toSet());
     }
 
 }

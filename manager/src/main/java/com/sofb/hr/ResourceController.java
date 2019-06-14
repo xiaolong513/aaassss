@@ -4,6 +4,7 @@ import com.sofb.BaseController;
 import com.sofb.common.ServerResult;
 import com.sofb.common.StringUtil;
 import com.sofb.convert.ResourceVOConvert;
+import com.sofb.enums.ResourceTypeEnum;
 import com.sofb.enums.ServerResultCodeEnum;
 import com.sofb.enums.SortEnum;
 import com.sofb.form.hr.ResourceSearchForm;
@@ -45,14 +46,11 @@ public class ResourceController extends BaseController {
         if (StringUtil.isEmpty(resource.getResourceType())) {
             return new ServerResult().error(ServerResultCodeEnum.C0008, "资源类型为空");
         }
-        if (StringUtil.isEmpty(resource.getUrl())) {
+        if (StringUtil.isEmpty(resource.getUrl()) && resource.getResourceType() == ResourceTypeEnum.MENU) {
             return new ServerResult().error(ServerResultCodeEnum.C0008, "资源链接为空");
         }
         if (StringUtil.isEmpty(resource.getParentId())) {
             return new ServerResult().error(ServerResultCodeEnum.C0008, "父链接为空");
-        }
-        if (StringUtil.isEmpty(resource.getPermission())) {
-            return new ServerResult().error(ServerResultCodeEnum.C0008, "权限为空");
         }
         boolean result = resourceService.saveResource(resource);
 

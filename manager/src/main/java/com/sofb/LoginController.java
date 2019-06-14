@@ -6,6 +6,7 @@ import com.sofb.enums.ServerResultCodeEnum;
 import com.sofb.hr.Person;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,8 @@ public class LoginController {
             return new ServerResult().error(ServerResultCodeEnum.C0007);
         } catch (AuthenticationException e) {
             return new ServerResult().error(ServerResultCodeEnum.C0006);
+        } catch (UnauthorizedException e) {
+            return new ServerResult().error(ServerResultCodeEnum.C0005);
         } catch (Exception e) {
             return new ServerResult().error(ServerResultCodeEnum.C0009);
         }

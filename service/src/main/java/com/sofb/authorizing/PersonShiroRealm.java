@@ -39,10 +39,10 @@ public class PersonShiroRealm extends AuthorizingRealm {
 
         //添加角色和权限
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        for (Role role : personInfo.getRoles()) {
-            //添加角色
-            simpleAuthorizationInfo.addRole(role.getRoleName());
-        }
+
+        //添加角色
+        simpleAuthorizationInfo.addRoles(personInfo.getRoleNames());
+
         //添加权限
         simpleAuthorizationInfo.addStringPermissions(personInfo.getPermissions());
 

@@ -23,13 +23,14 @@ public class ResourceControllerTest extends BaseTest {
     public void save_test() throws Exception {
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/resource/save")
-                .param("resourceName", "admin")
-                .param("priority", "1")
-                .param("resourceType", "MENU")
-                .param("parentId", "1")
-                .param("permission", "role:*")
-                .param("description", "权限列表")
-                .param("url", "http://www.baidu.com"))
+                        .param("resourceName", "人员列表")
+                        .param("priority", "1")
+                        .param("resourceType", "BUTTON")
+                        .param("parentId", "4")
+                        .param("permission", "resource:view")
+                        .param("description", "人员管理")
+                //.param("url", "http://www.google.com")
+        )
                 .andExpect(MockMvcResultMatchers.status().isOk())// 模拟向testRest发送get请求
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))// 预期返回值的媒体类型text/plain;charset=UTF-8
                 .andReturn();// 返回执行请求的结果
