@@ -4,12 +4,9 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 public class ReloginFormAuthenticationFilter extends FormAuthenticationFilter {
     public ReloginFormAuthenticationFilter() {
@@ -24,8 +21,12 @@ public class ReloginFormAuthenticationFilter extends FormAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        if (isLoginRequest(request, response) && isLoginSubmission(request, response)) {
-            return false;
+        if (isLoginRequest(request, response)) {
+            if (isLoginSubmission(request, response)) {
+                return false;
+            } else {
+                return true;
+            }
         }
 
         return super.isAccessAllowed(request, response, mappedValue);
