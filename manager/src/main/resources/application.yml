@@ -64,6 +64,12 @@ hystrix:
           thread:
             timeoutInMilliseconds: 100
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 shiro:
   config:
     anon-url:
