@@ -2,9 +2,7 @@
 server:
   # 服务端口
   port: 8234
-  servlet:
-    # 项目contextPath
-    context-path: /sofb-manager
+
   tomcat:
     # tomcat的URI编码
     uri-encoding: UTF-8
