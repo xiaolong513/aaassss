@@ -1,13 +1,12 @@
 package com.sofb.feign.fallback;
 
 import com.sofb.common.ServerResult;
+import com.sofb.enums.ServerResultCodeEnum;
 import com.sofb.feign.StatisticHouseFeign;
-import com.sofb.form.HouseBrokerStatisticsForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -23,13 +22,13 @@ public class StatisticHouseFallback implements StatisticHouseFeign {
     @Override
     public Object listHouseData(Map<String, String> para) {
         logger.info("降级服务");
-        return new ServerResult().success(new ArrayList<Object>(),"暂无数据");
+        return new ServerResult().error(ServerResultCodeEnum.C0009, "暂无数据");
     }
 
     @Override
     public Object listHouseGraphData(Map<String, String> para) {
         logger.info("降级服务");
-        return new ServerResult().success(new ArrayList<Object>(),"暂无数据");
+        return new ServerResult().error(ServerResultCodeEnum.C0009, "暂无数据");
     }
 
     @Override

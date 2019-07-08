@@ -1,11 +1,11 @@
 package com.sofb.feign.fallback;
 
 import com.sofb.common.ServerResult;
+import com.sofb.enums.ServerResultCodeEnum;
 import com.sofb.feign.StatisticBrokerFeign;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -19,13 +19,13 @@ public class StatisticBrokerFallback implements StatisticBrokerFeign {
     @Override
     public Object listBrokerData(Map<String, String> para) {
         logger.info("降级服务");
-        return new ServerResult().success(new ArrayList<Object>(), "暂无数据");
+        return new ServerResult().error(ServerResultCodeEnum.C0009, "暂无数据");
     }
 
     @Override
     public Object listBrokerGraphData(Map<String, String> para) {
         logger.info("降级服务");
-        return new ServerResult().success(new ArrayList<Object>(), "暂无数据");
+        return new ServerResult().error(ServerResultCodeEnum.C0009, "暂无数据");
     }
 
     @Override
